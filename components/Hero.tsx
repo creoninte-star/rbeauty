@@ -1,5 +1,6 @@
 "use client";
 
+// Premium scroll-driven hero video scrubbing implementation
 import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
