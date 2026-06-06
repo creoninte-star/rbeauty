@@ -43,37 +43,28 @@ export default function Hero() {
     // Immediately resolve loading state if video metadata/data is already loaded (common in fast local servers)
     if (video.readyState >= 1) {
       setIsVideoReady(true);
+      video.play().catch((err) => {
+        console.warn("Autoplay check:", err);
+      });
     }
 
     const handleLoaded = () => {
       setIsVideoReady(true);
+      video.play().catch((err) => {
+        console.warn("Autoplay event prevention:", err);
+      });
     };
 
     video.addEventListener("loadedmetadata", handleLoaded);
     video.addEventListener("loadeddata", handleLoaded);
     video.addEventListener("canplay", handleLoaded);
 
-    const unsubscribe = scrollYProgress.on("change", (progress) => {
-      if (video.readyState < 1) return; // HAVE_METADATA
-      if (!video.duration || isNaN(video.duration)) return;
-      
-      const loops = 1.5;
-      const targetTime = (progress * loops * video.duration) % video.duration;
-      
-      try {
-        video.currentTime = targetTime;
-      } catch (err) {
-        console.error("Error setting video current time:", err);
-      }
-    });
-
     return () => {
       video.removeEventListener("loadedmetadata", handleLoaded);
       video.removeEventListener("loadeddata", handleLoaded);
       video.removeEventListener("canplay", handleLoaded);
-      unsubscribe();
     };
-  }, [scrollYProgress]);
+  }, []);
 
   return (
     <section
@@ -218,6 +209,8 @@ export default function Hero() {
             <video
               ref={videoRef}
               src="/hero-video.mp4"
+              autoPlay
+              loop
               muted
               playsInline
               preload="auto"
