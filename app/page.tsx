@@ -9,10 +9,12 @@ import BookingCTA from "@/components/BookingCTA";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import Preloader from "@/components/Preloader";
 
 export default function Home() {
   return (
     <>
+      <Preloader />
       <CustomCursor />
       <Navbar />
       <main className="flex flex-col min-h-screen">

@@ -78,6 +78,8 @@ function ServiceCard({
   return (
     <motion.div
       variants={cardVariants}
+      whileHover={{ y: -8, scale: 1.006 }}
+      transition={{ duration: 0.4, ease: easeSmooth }}
       className={`group relative bg-[#F5EEE8] rounded-xl overflow-hidden card-shadow hover:card-shadow-hover transition-shadow duration-500 ${className}`}
     >
       {/* Image */}
@@ -126,20 +128,23 @@ export default function Services() {
     <section id="services" className="section-padding bg-[#FBF7F4]">
       <div className="max-container">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: easeSmooth }}
-          className="text-center mb-16"
-        >
-          <h2
-            className="mb-4"
-            style={{ fontFamily: "var(--font-display)", fontWeight: 300 }}
-          >
-            Our Signature Services
-          </h2>
-          <p
+        <div className="text-center mb-16 flex flex-col items-center">
+          <div className="overflow-hidden mb-4">
+            <motion.h2
+              initial={{ y: "100%" }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: easeSmooth }}
+              style={{ fontFamily: "var(--font-display)", fontWeight: 300 }}
+            >
+              Our Signature Services
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: easeSmooth, delay: 0.15 }}
             className="max-w-lg mx-auto text-base"
             style={{
               fontFamily: "var(--font-body)",
@@ -148,8 +153,8 @@ export default function Services() {
             }}
           >
             Each treatment crafted with care, precision, and the finest products.
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         {/* Asymmetric Grid */}
         <motion.div

@@ -76,7 +76,8 @@ export default function Gallery() {
                 className="masonry-item group cursor-pointer"
                 onClick={() => setLightboxIndex(i)}
               >
-                <div
+                <motion.div
+                  layoutId={`gallery-img-${img.src}`}
                   className={`relative overflow-hidden rounded-xl card-shadow ${
                     i % 3 === 0
                       ? "aspect-[3/4]"
@@ -101,13 +102,13 @@ export default function Gallery() {
                       {img.title}
                     </span>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
+ 
       {/* Lightbox */}
       <AnimatePresence>
         {lightboxIndex !== null && (
@@ -120,10 +121,8 @@ export default function Gallery() {
             onClick={() => setLightboxIndex(null)}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.4, ease: easeSmooth }}
+              layoutId={`gallery-img-${galleryImages[lightboxIndex].src}`}
+              transition={{ duration: 0.5, ease: easeSmooth }}
               className="relative max-w-4xl max-h-[85vh] w-[90vw] aspect-[3/4] rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
