@@ -101,6 +101,10 @@ export default function Hero() {
       sh = newSh;
     }
 
+    /* Enhance rendering quality to mask compression artifacts */
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
     ctx.clearRect(0, 0, w, h);
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
   }, []);
@@ -174,6 +178,7 @@ export default function Hero() {
           style={{
             opacity: imagesReady ? 1 : 0,
             transition: "opacity 0.8s ease",
+            filter: "contrast(1.05) saturate(1.1) brightness(0.95)",
           }}
         />
 
