@@ -327,30 +327,31 @@ export default function Hero() {
                   ease: easeSmooth,
                   delay: 0.8,
                 }}
-                className="flex flex-col sm:flex-row gap-3 mt-2"
+                className="flex flex-row gap-3 mt-2"
               >
                 <a
                   href="#booking"
-                  className="btn-primary text-center"
+                  className="btn-primary text-center text-xs md:text-sm px-4 py-3 md:px-6 md:py-3.5"
                   style={{
                     background: "#C9896A",
                     color: "#fff",
                     border: "none",
                     boxShadow: "0 6px 28px rgba(201,137,106,0.5)",
-                    backdropFilter: "none",
+                    letterSpacing: "0.1em",
                   }}
                 >
                   Book Appointment
                 </a>
                 <a
                   href="#services"
-                  className="btn-ghost text-center"
+                  className="btn-ghost text-center text-xs md:text-sm px-4 py-3 md:px-6 md:py-3.5"
                   style={{
                     color: "#fff",
                     borderColor: "rgba(255,255,255,0.5)",
                     backdropFilter: "blur(10px)",
                     WebkitBackdropFilter: "blur(10px)",
                     background: "rgba(255,255,255,0.08)",
+                    letterSpacing: "0.1em",
                   }}
                 >
                   Explore Services

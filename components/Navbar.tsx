@@ -54,13 +54,13 @@ export default function Navbar() {
               xmlns="http://www.w3.org/2000/svg"
               className="transition-transform duration-500 group-hover:scale-105"
             >
-              <circle cx="21" cy="21" r="20" stroke="#2C1A1D" strokeWidth="1.2" fill="none" />
+              <circle cx="21" cy="21" r="20" stroke={scrolled ? "#2C1A1D" : "rgba(255,255,255,0.9)"} strokeWidth="1.2" fill="none" />
               <text
                 x="50%"
                 y="50%"
                 dominantBaseline="central"
                 textAnchor="middle"
-                fill="#2C1A1D"
+                fill={scrolled ? "#2C1A1D" : "rgba(255,255,255,0.95)"}
                 fontFamily="'Cormorant Garamond', serif"
                 fontSize="20"
                 fontWeight="400"
@@ -71,24 +71,31 @@ export default function Navbar() {
               <path
                 d="M30 12 C28 14, 26 13, 27 11 C28 9, 30 10, 30 12Z"
                 fill="#C9896A"
-                opacity="0.8"
+                opacity="0.9"
               />
               <path
                 d="M32 14 C30 16, 29 14, 30 12.5 C31 11, 32 12, 32 14Z"
                 fill="#C9896A"
-                opacity="0.5"
+                opacity="0.6"
               />
             </svg>
             <div className="flex flex-col">
               <span
-                className="text-xl tracking-wide text-[#2C1A1D]"
-                style={{ fontFamily: "var(--font-display)" }}
+                className="text-xl tracking-wide transition-colors duration-500"
+                style={{
+                  fontFamily: "var(--font-display)",
+                  color: scrolled ? "#2C1A1D" : "rgba(255,255,255,0.95)",
+                  textShadow: scrolled ? "none" : "0 1px 8px rgba(0,0,0,0.4)",
+                }}
               >
                 R Beauty
               </span>
               <span
-                className="text-[10px] tracking-[0.2em] uppercase text-[#7A6260] -mt-0.5"
-                style={{ fontFamily: "var(--font-body)" }}
+                className="text-[10px] tracking-[0.2em] uppercase -mt-0.5 transition-colors duration-500"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  color: scrolled ? "#7A6260" : "rgba(255,255,255,0.65)",
+                }}
               >
                 Family Salon
               </span>
@@ -121,17 +128,20 @@ export default function Navbar() {
             <motion.span
               animate={mobileOpen ? { rotate: 45, y: 7.5 } : { rotate: 0, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="block w-6 h-[1.5px] bg-[#2C1A1D]"
+              className="block w-6 h-[1.5px] transition-colors duration-500"
+              style={{ background: (scrolled || mobileOpen) ? "#2C1A1D" : "rgba(255,255,255,0.95)" }}
             />
             <motion.span
               animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.2 }}
-              className="block w-6 h-[1.5px] bg-[#2C1A1D]"
+              className="block w-6 h-[1.5px] transition-colors duration-500"
+              style={{ background: (scrolled || mobileOpen) ? "#2C1A1D" : "rgba(255,255,255,0.95)" }}
             />
             <motion.span
               animate={mobileOpen ? { rotate: -45, y: -7.5 } : { rotate: 0, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="block w-6 h-[1.5px] bg-[#2C1A1D]"
+              className="block w-6 h-[1.5px] transition-colors duration-500"
+              style={{ background: (scrolled || mobileOpen) ? "#2C1A1D" : "rgba(255,255,255,0.95)" }}
             />
           </button>
         </div>
