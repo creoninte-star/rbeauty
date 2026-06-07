@@ -115,7 +115,7 @@ a {
    ============================================ */
 
 .section-padding {
-  padding: 6rem 1.5rem;
+  padding: 5rem 1.25rem;
 }
 
 @media (min-width: 768px) {
@@ -259,4 +259,31 @@ a {
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+@keyframes shimmerBtn {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes pulseGold {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.08); }
+}
+
+/* Premium gold divider utility */
+.gold-line {
+  height: 1px;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, #C9896A, #E8C9BE, transparent);
+}
+
+/* Hover lift for contact / service cards */
+.hover-lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(44, 26, 29, 0.12);
 }
