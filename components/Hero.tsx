@@ -16,7 +16,7 @@ import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-mot
 /* ── Constants ─────────────────────────────────────────────────────────── */
 const TOTAL_FRAMES = 300;
 const FRAME_PATH = (i: number) =>
-  `/hero-frames/frame_${String(i).padStart(4, "0")}.jpg`;
+  `/hero-frames/frame_${String(i).padStart(4, "0")}.webp`;
 
 const easeSmooth = [0.22, 1, 0.36, 1] as const;
 
@@ -70,6 +70,12 @@ export default function Hero() {
       ctx.scale(dpr, dpr);
     }
 
+    /* On mobile (<768px) zoom out slightly so more of the frame is visible.
+       We do this by expanding the source rect by a zoom factor before
+       clamping to the image bounds — this mimics a camera pull-back. */
+    const isMobile = w < 768;
+    const zoomFactor = isMobile ? 1.25 : 1.0; // 1.25 = show 25% more of source
+
     /* Cover-fit the image (same logic as CSS object-fit: cover) */
     const imgAspect = img.naturalWidth / img.naturalHeight;
     const canvasAspect = w / h;
@@ -83,6 +89,16 @@ export default function Hero() {
     } else {
       sh = img.naturalWidth / canvasAspect;
       sy = (img.naturalHeight - sh) / 2;
+    }
+
+    /* Apply zoom-out: expand source rect, re-centre, clamp */
+    if (zoomFactor !== 1.0) {
+      const newSw = Math.min(sw * zoomFactor, img.naturalWidth);
+      const newSh = Math.min(sh * zoomFactor, img.naturalHeight);
+      sx = Math.max(0, sx - (newSw - sw) / 2);
+      sy = Math.max(0, sy - (newSh - sh) / 2);
+      sw = newSw;
+      sh = newSh;
     }
 
     ctx.clearRect(0, 0, w, h);
@@ -161,12 +177,19 @@ export default function Hero() {
           }}
         />
 
-        {/* Subtle cinematic overlay */}
+        {/* Cinematic overlay — stronger on mobile for readability & premium feel */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none hidden md:block"
           style={{
             background:
               "linear-gradient(to bottom, rgba(44,26,29,0.35) 0%, rgba(44,26,29,0.08) 40%, rgba(44,26,29,0.0) 55%, rgba(44,26,29,0.25) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none block md:hidden"
+          style={{
+            background:
+              "linear-gradient(160deg, rgba(30,18,21,0.72) 0%, rgba(30,18,21,0.45) 45%, rgba(30,18,21,0.15) 70%, rgba(30,18,21,0.6) 100%)",
           }}
         />
 
@@ -202,10 +225,10 @@ export default function Hero() {
         {/* ── Text overlay ────────────────────────────────────────────── */}
         <motion.div
           style={{ opacity: textOpacity, y: textY }}
-          className="absolute inset-0 flex items-center z-10"
+          className="absolute inset-0 flex items-end md:items-center z-10"
         >
-          <div className="max-w-[1400px] mx-auto w-full px-6 md:px-10">
-            <div className="max-w-xl flex flex-col gap-5">
+          <div className="max-w-[1400px] mx-auto w-full px-5 md:px-10 pb-16 md:pb-0">
+            <div className="max-w-xl flex flex-col gap-4 md:gap-5">
               {/* Establishment Label */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -227,7 +250,7 @@ export default function Hero() {
 
               {/* Main Heading */}
               <motion.h1
-                className="leading-[0.95]"
+                className="leading-[0.95] text-[11vw] md:text-[clamp(3rem,6vw,5.5rem)]"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontWeight: 300,
@@ -240,7 +263,7 @@ export default function Hero() {
                   animate="visible"
                   className="block text-white"
                   style={{
-                    textShadow: "0 2px 30px rgba(44,26,29,0.35)",
+                    textShadow: "0 2px 40px rgba(20,10,12,0.7)",
                   }}
                 >
                   Where Beauty
@@ -255,7 +278,7 @@ export default function Hero() {
                   <span
                     className="text-white"
                     style={{
-                      textShadow: "0 2px 30px rgba(44,26,29,0.35)",
+                      textShadow: "0 2px 40px rgba(20,10,12,0.7)",
                     }}
                   >
                     Meets{" "}
@@ -265,7 +288,7 @@ export default function Hero() {
                     style={{
                       fontFamily: "var(--font-display)",
                       color: "#F4D5C4",
-                      textShadow: "0 2px 30px rgba(44,26,29,0.35)",
+                      textShadow: "0 2px 40px rgba(20,10,12,0.7)",
                     }}
                   >
                     Elegance
@@ -282,12 +305,12 @@ export default function Hero() {
                   ease: easeSmooth,
                   delay: 0.6,
                 }}
-                className="text-base md:text-lg max-w-md leading-relaxed"
+                className="text-sm md:text-lg max-w-md leading-relaxed"
                 style={{
                   fontFamily: "var(--font-body)",
                   fontWeight: 300,
-                  color: "rgba(255,255,255,0.85)",
-                  textShadow: "0 1px 12px rgba(44,26,29,0.3)",
+                  color: "rgba(255,255,255,0.92)",
+                  textShadow: "0 1px 16px rgba(20,10,12,0.65)",
                 }}
               >
                 Premium facials, hair styling, nail art &amp; bridal makeup.
@@ -304,26 +327,30 @@ export default function Hero() {
                   ease: easeSmooth,
                   delay: 0.8,
                 }}
-                className="flex flex-wrap gap-4 mt-2"
+                className="flex flex-col sm:flex-row gap-3 mt-2"
               >
                 <a
                   href="#booking"
-                  className="btn-primary"
+                  className="btn-primary text-center"
                   style={{
                     background: "#C9896A",
                     color: "#fff",
                     border: "none",
-                    boxShadow: "0 4px 24px rgba(201,137,106,0.35)",
+                    boxShadow: "0 6px 28px rgba(201,137,106,0.5)",
+                    backdropFilter: "none",
                   }}
                 >
                   Book Appointment
                 </a>
                 <a
                   href="#services"
-                  className="btn-ghost"
+                  className="btn-ghost text-center"
                   style={{
                     color: "#fff",
-                    borderColor: "rgba(255,255,255,0.4)",
+                    borderColor: "rgba(255,255,255,0.5)",
+                    backdropFilter: "blur(10px)",
+                    WebkitBackdropFilter: "blur(10px)",
+                    background: "rgba(255,255,255,0.08)",
                   }}
                 >
                   Explore Services

@@ -9,11 +9,9 @@ export default function Preloader() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Hide the loader after 2.5 seconds
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2400);
-
+    }, 2600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -21,99 +19,169 @@ export default function Preloader() {
     <AnimatePresence>
       {loading && (
         <motion.div
-          initial={{ y: 0 }}
-          exit={{ 
+          initial={{ opacity: 1 }}
+          exit={{
             y: "-100%",
-            transition: { duration: 0.8, ease: easeSmooth }
+            transition: { duration: 0.85, ease: easeSmooth },
           }}
-          className="fixed inset-0 bg-[#2C1A1D] z-[99999] flex flex-col items-center justify-center gap-6"
+          className="fixed inset-0 z-[99999] flex flex-col items-center justify-center gap-8"
+          style={{ background: "#1E1215" }}
         >
-          {/* Animated SVG Logo */}
+          {/* ── Animated SVG emblem ── */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative"
+            transition={{ duration: 0.55, ease: "easeOut" }}
+            className="relative flex items-center justify-center"
           >
             <svg
-              width="120"
-              height="120"
-              viewBox="0 0 42 42"
+              width="110"
+              height="110"
+              viewBox="0 0 100 100"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Tracing Outer Circle */}
-              <motion.circle
-                cx="21"
-                cy="21"
-                r="20"
-                stroke="#FBF7F4"
-                strokeWidth="0.8"
+              {/* Thin background circle (static) */}
+              <circle
+                cx="50"
+                cy="50"
+                r="44"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="1"
                 fill="none"
-                initial={{ pathLength: 0, rotate: -90 }}
-                animate={{ pathLength: 1, rotate: 270 }}
-                transition={{ duration: 1.6, ease: "easeInOut" }}
-                style={{ transformOrigin: "21px 21px" }}
               />
-              
-              {/* Fading in 'R' Text */}
+
+              {/* Animated tracing circle */}
+              <motion.circle
+                cx="50"
+                cy="50"
+                r="44"
+                stroke="#E8C9BE"
+                strokeWidth="1"
+                fill="none"
+                strokeLinecap="round"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.8, ease: "easeInOut" }}
+                style={{
+                  rotate: -90,
+                  transformOrigin: "50px 50px",
+                }}
+              />
+
+              {/* 'R' letter — centred at (50,50) */}
               <motion.text
-                x="21"
-                y="22"
+                x="50"
+                y="50"
                 dominantBaseline="central"
                 textAnchor="middle"
                 fill="#FBF7F4"
-                fontFamily="var(--font-display)"
-                fontSize="18"
+                fontFamily="Georgia, serif"
+                fontSize="32"
                 fontWeight="300"
-                initial={{ opacity: 0, y: 26 }}
-                animate={{ opacity: 1, y: 22 }}
-                transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
               >
                 R
               </motion.text>
 
-              {/* Fading in Leaves */}
-              <motion.path
-                d="M30 12 C28 14, 26 13, 27 11 C28 9, 30 10, 30 12Z"
+              {/* Decorative petal — top-right inside circle */}
+              <motion.ellipse
+                cx="68"
+                cy="30"
+                rx="5"
+                ry="3"
                 fill="#C9896A"
+                opacity="0"
+                transform="rotate(-35 68 30)"
                 initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 0.8, scale: 1 }}
-                transition={{ delay: 1.1, duration: 0.5, ease: "easeOut" }}
-                style={{ transformOrigin: "27px 11px" }}
+                animate={{ opacity: 0.9, scale: 1 }}
+                transition={{ delay: 1.2, duration: 0.45, ease: "easeOut" }}
+                style={{ transformOrigin: "68px 30px" }}
               />
-              <motion.path
-                d="M32 14 C30 16, 29 14, 30 12.5 C31 11, 32 12, 32 14Z"
+              {/* Second smaller petal */}
+              <motion.ellipse
+                cx="74"
+                cy="38"
+                rx="3.5"
+                ry="2"
                 fill="#C9896A"
+                opacity="0"
+                transform="rotate(-50 74 38)"
                 initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 0.5, scale: 1 }}
-                transition={{ delay: 1.3, duration: 0.5, ease: "easeOut" }}
-                style={{ transformOrigin: "30px 12.5px" }}
+                animate={{ opacity: 0.55, scale: 1 }}
+                transition={{ delay: 1.4, duration: 0.45, ease: "easeOut" }}
+                style={{ transformOrigin: "74px 38px" }}
               />
             </svg>
           </motion.div>
 
-          {/* Subtitle / Brand slogan */}
-          <div className="overflow-hidden flex flex-col items-center gap-2">
+          {/* ── Brand text ── */}
+          <div className="flex flex-col items-center gap-2 overflow-hidden">
             <motion.span
-              initial={{ y: 30, opacity: 0 }}
+              initial={{ y: 28, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
-              className="text-white text-lg tracking-[0.15em] uppercase font-light font-body"
-              style={{ fontFamily: "var(--font-body)" }}
+              transition={{ delay: 0.65, duration: 0.75, ease: "easeOut" }}
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "18px",
+                letterSpacing: "0.22em",
+                fontWeight: 300,
+                color: "#FBF7F4",
+                textTransform: "uppercase",
+              }}
             >
               R Beauty
             </motion.span>
             <motion.span
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 0.6 }}
-              transition={{ delay: 0.9, duration: 0.8, ease: "easeOut" }}
-              className="text-[#E8C9BE] text-[10px] tracking-[0.25em] uppercase font-light font-body"
-              style={{ fontFamily: "var(--font-body)" }}
+              initial={{ y: 18, opacity: 0 }}
+              animate={{ y: 0, opacity: 0.55 }}
+              transition={{ delay: 0.85, duration: 0.75, ease: "easeOut" }}
+              style={{
+                fontFamily: "Georgia, serif",
+                fontSize: "10px",
+                letterSpacing: "0.28em",
+                fontWeight: 300,
+                color: "#E8C9BE",
+                textTransform: "uppercase",
+              }}
             >
               Where Beauty Meets Elegance
             </motion.span>
           </div>
+
+          {/* ── Thin gold progress line ── */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.0, duration: 0.5 }}
+            style={{
+              width: "80px",
+              height: "1px",
+              background: "rgba(232,201,190,0.2)",
+              position: "relative",
+              overflow: "hidden",
+              borderRadius: "2px",
+            }}
+          >
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: "100%" }}
+              transition={{
+                duration: 1.2,
+                delay: 1.0,
+                ease: "easeInOut",
+                repeat: Infinity,
+              }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  "linear-gradient(90deg, transparent, #C9896A, transparent)",
+              }}
+            />
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
