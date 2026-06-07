@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 const easeSmooth = [0.22, 1, 0.36, 1] as const;
@@ -17,25 +17,67 @@ const galleryImages = [
   { src: "/images/hero_placeholder.png", title: "Elegant Styling" },
 ];
 
-const itemVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: i * 0.08,
-      duration: 0.6,
-      ease: easeSmooth,
-    },
-  }),
-};
+function GalleryItem({ img, i, setLightboxIndex }: { img: any, i: number, setLightboxIndex: any }) {
+  const itemRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: itemRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Parallax + Fade-in & Scale
+  const y = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.9]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+
+  // Determine shape based on index for non-boxy, premium editorial look
+  const getShapeClasses = (index: number) => {
+    switch (index % 4) {
+      case 0: return "rounded-[3rem] rounded-tr-none aspect-[3/4]";
+      case 1: return "rounded-full aspect-[2/3]"; // Pill shape
+      case 2: return "rounded-[2rem] aspect-square";
+      case 3: return "rounded-tl-[4rem] rounded-br-[4rem] rounded-tr-xl rounded-bl-xl aspect-[4/5]";
+      default: return "rounded-[2rem] aspect-square";
+    }
+  };
+
+  return (
+    <motion.div
+      ref={itemRef}
+      style={{ y, opacity, scale }}
+      className="masonry-item group cursor-pointer mb-10 md:mb-16 relative"
+      onClick={() => setLightboxIndex(i)}
+    >
+      <div className={`relative overflow-hidden card-shadow-hover bg-[#E8C9BE]/10 ${getShapeClasses(i)}`}>
+        {/* Shimmer Placeholder Background */}
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-[#E8C9BE]/20 to-[#C9896A]/10" />
+        
+        <Image
+          src={img.src}
+          alt={img.title}
+          fill
+          className="object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 z-10"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        {/* Elegant Hover Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A0F10]/80 via-[#1A0F10]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-8 z-20">
+          <span
+            className="text-[#FBF7F4] text-xl translate-y-6 group-hover:translate-y-0 transition-transform duration-500 ease-out"
+            style={{ fontFamily: "var(--font-display)", fontWeight: 300, letterSpacing: "0.05em" }}
+          >
+            {img.title}
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Gallery() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
     <>
-      <section id="gallery" className="section-padding bg-[#F9F0EB]">
+      <section id="gallery" className="section-padding bg-gradient-to-b from-[#FBF7F4] to-[#F9F0EB] overflow-hidden">
         <div className="max-container">
           {/* Section Header */}
           <motion.div
@@ -43,16 +85,23 @@ export default function Gallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: easeSmooth }}
-            className="text-center mb-16"
+            className="text-center mb-20 md:mb-28"
           >
+            <span
+              className="text-[#C9896A] text-xs uppercase tracking-[0.2em] mb-4 block"
+              style={{ fontFamily: "var(--font-body)", fontWeight: 400 }}
+            >
+              Portfolio
+            </span>
             <h2
-              className="mb-4"
+              className="mb-6 text-[#1A0F10]"
               style={{ fontFamily: "var(--font-display)", fontWeight: 300 }}
             >
               The R Beauty Experience
             </h2>
+            <div className="w-16 h-[1px] bg-[#C9896A] mx-auto mb-6 opacity-50" />
             <p
-              className="max-w-lg mx-auto text-base"
+              className="max-w-md mx-auto text-base"
               style={{
                 fontFamily: "var(--font-body)",
                 fontWeight: 300,
@@ -64,46 +113,9 @@ export default function Gallery() {
           </motion.div>
 
           {/* Masonry Grid */}
-          <div className="masonry-grid">
+          <div className="masonry-grid gap-x-6 md:gap-x-12">
             {galleryImages.map((img, i) => (
-              <motion.div
-                key={img.src}
-                custom={i}
-                variants={itemVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                className="masonry-item group cursor-pointer"
-                onClick={() => setLightboxIndex(i)}
-              >
-                <motion.div
-                  layoutId={`gallery-img-${img.src}`}
-                  className={`relative overflow-hidden rounded-xl card-shadow ${
-                    i % 3 === 0
-                      ? "aspect-[3/4]"
-                      : i % 3 === 1
-                      ? "aspect-square"
-                      : "aspect-[4/5]"
-                  }`}
-                >
-                  <Image
-                    src={img.src}
-                    alt={img.title}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-[#2C1A1D]/0 group-hover:bg-[#2C1A1D]/50 transition-all duration-500 flex items-end justify-center pb-8">
-                    <span
-                      className="text-white text-lg opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500"
-                      style={{ fontFamily: "var(--font-display)", fontWeight: 400 }}
-                    >
-                      {img.title}
-                    </span>
-                  </div>
-                </motion.div>
-              </motion.div>
+              <GalleryItem key={img.src} img={img} i={i} setLightboxIndex={setLightboxIndex} />
             ))}
           </div>
         </div>
